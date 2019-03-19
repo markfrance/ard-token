@@ -277,7 +277,7 @@ contract ARDTokenVesting is Ownable {
     mapping (address => uint256) private _released;
 
     modifier hasVestingStarted() {
-        require(_hasStarted);
+        require(_hasStarted, "Call start vesting to start.");
         _;
     }
 
@@ -289,8 +289,8 @@ contract ARDTokenVesting is Ownable {
      * @param duration duration in seconds of the period in which the tokens will vest
     */
     constructor (address beneficiary,  uint256 duration) public {
-        require(beneficiary != address(0));
-        require(duration > 0);
+        require(beneficiary != address(0), "Beneficiary must be valid address");
+        require(duration > 0, "Duration must be greater than 0");
 
         _beneficiary = beneficiary;
         _duration = duration;
@@ -341,7 +341,7 @@ contract ARDTokenVesting is Ownable {
     function release(IERC20 token) public hasVestingStarted{
         uint256 unreleased = _releasableAmount(token);
 
-        require(unreleased > 0);
+        require(unreleased > 0, "No remaining tokens to release.");
 
         _released[address(token)] = _released[address(token)].add(unreleased);
 

@@ -198,8 +198,9 @@ contract ARDTokenTimelock {
     uint256 private _releaseTime;
 
     constructor (IERC20 token, address beneficiary, uint256 releaseTime) public {
-        // solhint-disable-next-line not-rely-on-time
-        require(releaseTime > block.timestamp);
+        
+        require(releaseTime > block.timestamp, 
+            "Release time must be in the future");
         _token = token;
         _beneficiary = beneficiary;
         _releaseTime = releaseTime;
@@ -230,8 +231,9 @@ contract ARDTokenTimelock {
      * @notice Transfers tokens held by timelock to beneficiary.
      */
     function release() public {
-        // solhint-disable-next-line not-rely-on-time
-        require(block.timestamp >= _releaseTime);
+
+        require(block.timestamp >= _releaseTime,
+            "Must be after release time");
 
         uint256 amount = _token.balanceOf(address(this));
         require(amount > 0);
